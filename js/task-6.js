@@ -4,29 +4,10 @@ function getRandomHexColor() {
     .padStart(6, "0")}`;
 }
 
-const controls = document.getElementById("controls");
-const input = controls.querySelector("input");
-const createButton = controls.querySelector("[data-create]");
-const destroyButton = controls.querySelector("[data-destroy]");
-const boxes = document.getElementById("boxes");
-
-createButton.addEventListener("click", () => {
-  const amount = Number(input.value);
-  if (amount < 1 || amount > 100 || isNaN(amount)) {
-    alert("Please enter a number between 1 and 100");
-    return;
-  }
-
-  createBoxes(amount);
-  input.value = "";
-});
-
-destroyButton.addEventListener("click", () => {
-  destroyBoxes();
-});
-
 function createBoxes(amount) {
-  destroyBoxes();
+  const boxesContainer = document.getElementById("boxes");
+
+  boxesContainer.innerHTML = "";
 
   let size = 30;
   for (let i = 0; i < amount; i++) {
@@ -34,11 +15,30 @@ function createBoxes(amount) {
     box.style.width = `${size}px`;
     box.style.height = `${size}px`;
     box.style.backgroundColor = getRandomHexColor();
-    boxes.appendChild(box);
+    boxesContainer.appendChild(box);
     size += 10;
   }
 }
 
 function destroyBoxes() {
-  boxes.innerHTML = "";
+  const boxesContainer = document.getElementById("boxes");
+  boxesContainer.innerHTML = "";
 }
+
+document.addEventListener("DOMContentLoaded", function () {
+  const createButton = document.querySelector("[data-create]");
+  const destroyButton = document.querySelector("[data-destroy]");
+  const input = document.querySelector('input[type="number"]');
+
+  createButton.addEventListener("click", function () {
+    const amount = parseInt(input.value);
+    if (amount >= 1 && amount <= 100) {
+      createBoxes(amount);
+      input.value = "";
+    } else {
+      alert("Кількість елементів повинна бути в межах від 1 до 100.");
+    }
+  });
+
+  destroyButton.addEventListener("click", destroyBoxes);
+});
